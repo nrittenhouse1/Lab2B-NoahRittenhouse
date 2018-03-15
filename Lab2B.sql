@@ -1,5 +1,9 @@
 /*
 	Noah Rittenhouse, A01
+	Dan Gilleland
+	Database Fundamentals
+
+	Deficiencies: 
 */
 
 
