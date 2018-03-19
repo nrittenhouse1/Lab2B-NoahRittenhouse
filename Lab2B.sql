@@ -82,10 +82,22 @@ GROUP BY C.CustomerNumber, FirstName, LastName, S.SaleNumber, Date, SubTotal, GS
 --9.	Select the Full Names and full mailing address of all the Customers and Employees. In order to create mailing labels the following 5 columns are required: 
 --		Name, Address, City, Prov, PC. DO NOT return more than 5 columns. There is no need to differentiate between Customer and Employee addresses.
 
+--SELECT C.FirstName + ' ' + C.LastName AS 'Customer Name', C.Email, E.FirstName + ' ' + E.LastName AS 'Employee Name', E.Email
+SELECT FirstName + ' ' + LastName AS 'Full Name', Address, City, Province, PostalCode
+FROM Customers
 
+UNION
 
+SELECT FirstName + ' ' + LastName AS 'Full Name', Address, City, Province, PostalCode
+FROM Employees
 
 --10.	Select the Customer Names that have shaw.ca email addresses and have made more than 3 sales.
+
+SELECT FirstName + ' ' + LastName AS 'Customer', Email, COUNT(SaleNumber) AS 'Sales Made'
+FROM Customers C
+	INNER JOIN Sales S ON C.CustomerNumber = S.CustomerNumber
+HAVING Email LIKE '%shaw.ca' AND COUNT(SaleNumber) > 3
+GROUP BY FirstName, LastName, Email
 
 --11.	Select the name of the Employee and the email address for the employee that has the highest individual sale for the current month. This query will be run on the last day of each month to determine the winner for that month. You must use a subquery in your solution.
 
