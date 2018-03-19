@@ -102,14 +102,51 @@ HAVING Email LIKE '%shaw.ca' AND COUNT(SaleNumber) > 3
 --11.	Select the name of the Employee and the email address for the employee that has the highest individual sale for the current month. 
 --		This query will be run on the last day of each month to determine the winner for that month. You must use a subquery in your solution.
 
-SELECT EmployeeNumber
-FROM Employees
-	WHERE EmployeeNumber = 
+SELECT FirstName + ' ' + LastName AS 'Employee', Email, Total
+FROM Employees E
+	INNER JOIN Sales S ON S.EmployeeNumber = E.EmployeeNumber
+	WHERE S.Total =
 	(
-		SELECT EmployeeNumber
+		SELECT MAX(total)
 		FROM Sales
-		HAVING MAX(Total)
 	)
-GROUP BY EmployeeNumber
+GROUP BY FirstName, LastName, Email, Total
+
 
 --12.	Select ALL the customer full names (as one column),a count of books they have purchased and the number of sales they have. Order the list alphabeticaly by Customer Last Name.
+
+SELECT FirstName + ' ' + LastName AS 'Customer Name', COUNT(ISBN) AS 'Book Count', COUNT(S.SaleNumber) AS 'Sale Count'
+FROM Customers C
+	INNER JOIN Sales S ON S.CustomerNumber = C.CustomerNumber
+	INNER JOIN SaleDetails SD ON SD.SaleNumber = S.SaleNumber
+GROUP BY C.CustomerNumber, FirstName, LastName
+ORDER BY LastName
+
+
+
+-- VIEW
+--1.	Create a view called CustomerSaleHistory that will select the customernumber, customer full name (one column), salenumber, saledate, title, sellingprice, 
+--		and total for all the customers that have sales.
+
+IF OBJECT_ID('CustomerSaleHistory', 'V') IS NOT NULL
+    DROP VIEW CustomerSaleHistory
+GO
+CREATE VIEW CustomerSaleHistory
+AS
+    SELECT  C.CustomerNumber,  FirstName + ' ' + LastName AS 'Customer Name', S.SaleNumber, Date, Title, SellingPrice, Total
+    FROM    Customers C
+		INNER JOIN Sales S On S.CustomerNumber = C.CustomerNumber
+		INNER JOIN SaleDetails SD ON SD.SaleNumber = S.SaleNumber
+		INNER JOIN Books B On B.ISBN = SD.ISBN
+	GROUP BY C.CustomerNumber, FirstName, LastName, S.SaleNumber, Date, Title, SellingPrice, Total
+	HAVING COUNT(S.SaleNumber) != 0
+GO
+
+SELECT CustomerNumber, [Customer Name], SaleNumber, Date, Title, SellingPrice, Total
+FROM CustomerSaleHistory
+WHERE CustomerNumber = 11
+
+-- DML
+
+INSERT INTO Books (ISBN, Title, SuggestedPrice, NumberInStock, PublisherName, CategoryCode)
+VALUES(1021031217, 'SQL is my life. Make it yours!', .99, 95, 'West', 3)
