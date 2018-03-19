@@ -147,6 +147,26 @@ FROM CustomerSaleHistory
 WHERE CustomerNumber = 11
 
 -- DML
+-- 1.	Insert the following records into the Books table given the following data:
 
 INSERT INTO Books (ISBN, Title, SuggestedPrice, NumberInStock, PublisherName, CategoryCode)
 VALUES(1021031217, 'SQL is my life. Make it yours!', .99, 95, 'West', 3)
+
+--2.	Change the following records given the following data:
+--	a.	Increase all the suggested prices of the books in the business category by 10%
+
+UPDATE Books
+	SET SuggestedPrice = SuggestedPrice * 1.10
+
+--	b.	Adjust the Number in stock by +2 and change the suggested price to be $3.00 more than it is now for ISBN 1021031040
+
+UPDATE Books
+	SET NumberInStock = NumberInStock + 2, SuggestedPrice = SuggestedPrice + 3
+	WHERE ISBN = 1021031040
+
+--3.	Remove the following records given the following data:
+--	a.	Remove publishers that do not have any books in our store
+
+DELETE FROM Publishers
+FROM Books
+WHERE NumberInStock = 0
