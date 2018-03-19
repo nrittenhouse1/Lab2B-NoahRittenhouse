@@ -93,12 +93,23 @@ FROM Employees
 
 --10.	Select the Customer Names that have shaw.ca email addresses and have made more than 3 sales.
 
-SELECT FirstName + ' ' + LastName AS 'Customer', Email, COUNT(SaleNumber) AS 'Sales Made'
+SELECT FirstName + ' ' + LastName AS 'Customer'
 FROM Customers C
 	INNER JOIN Sales S ON C.CustomerNumber = S.CustomerNumber
-HAVING Email LIKE '%shaw.ca' AND COUNT(SaleNumber) > 3
 GROUP BY FirstName, LastName, Email
+HAVING Email LIKE '%shaw.ca' AND COUNT(SaleNumber) > 3
 
---11.	Select the name of the Employee and the email address for the employee that has the highest individual sale for the current month. This query will be run on the last day of each month to determine the winner for that month. You must use a subquery in your solution.
+--11.	Select the name of the Employee and the email address for the employee that has the highest individual sale for the current month. 
+--		This query will be run on the last day of each month to determine the winner for that month. You must use a subquery in your solution.
+
+SELECT EmployeeNumber
+FROM Employees
+	WHERE EmployeeNumber = 
+	(
+		SELECT EmployeeNumber
+		FROM Sales
+		HAVING MAX(Total)
+	)
+GROUP BY EmployeeNumber
 
 --12.	Select ALL the customer full names (as one column),a count of books they have purchased and the number of sales they have. Order the list alphabeticaly by Customer Last Name.
