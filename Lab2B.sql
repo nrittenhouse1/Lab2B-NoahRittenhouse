@@ -59,18 +59,31 @@ GROUP BY C.categoryCode, C.Description
 SELECT B.ISBN, Title, SUM(SubTotal) AS 'Total Income(No GST)'
 FROM Books B
 	INNER JOIN SaleDetails SD ON SD.ISBN = B.ISBN
-	INNER JOIN Sales S On S.SaleNumber = SD.SaleNumber
+	INNER JOIN Sales S ON S.SaleNumber = SD.SaleNumber
 WHERE SD.Amount > 100
 GROUP BY B.ISBN, Title
 
 --7.	Write the select statement to return ALL the customer names, CustomerNumbers and how many sales they have.
 
-
+SELECT FirstName + ' ' + LastName AS 'Customer Name', C.CustomerNumber, COUNT(SaleNumber) AS 'Sale Count'
+FROM Customers C
+	INNER JOIN Sales S ON S.CustomerNumber = C.CustomerNumber
+GROUP BY C.CustomerNumber, FirstName, LastName
 
 --8.	Select The CustomerNumber, Full Name, SaleNumber, SaleDate, SubTotal, GST, Total, ISBN, Title Quantity, and Amount for Sale Numbers 3008 to 3010. 
 
+SELECT C.CustomerNumber, FirstName + ' ' + LastName AS 'Customer Name', S.SaleNumber, Date, SubTotal, GST, Total, ISBN, COUNT(Quantity) AS 'Title Quantity', Amount
+FROM Customers C
+	INNER JOIN Sales S ON S.CustomerNumber = C.CustomerNumber
+	INNER JOIN SaleDetails SD ON SD.SaleNumber = S.SaleNumber
+WHERE S.SaleNumber >= 3008 AND S.SaleNumber <= 3010
+GROUP BY C.CustomerNumber, FirstName, LastName, S.SaleNumber, Date, SubTotal, GST, Total, ISBN, Amount
+
 --9.	Select the Full Names and full mailing address of all the Customers and Employees. In order to create mailing labels the following 5 columns are required: 
 --		Name, Address, City, Prov, PC. DO NOT return more than 5 columns. There is no need to differentiate between Customer and Employee addresses.
+
+
+
 
 --10.	Select the Customer Names that have shaw.ca email addresses and have made more than 3 sales.
 
